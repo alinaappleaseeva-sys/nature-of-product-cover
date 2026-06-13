@@ -1,0 +1,110 @@
+// Motif library. Every motif is SUPPORT material: atmospheric, low-contrast,
+// typography-safe. Lessons from competitor analysis baked in:
+//  - no visible node-graph (K1)  - no outline frames (K2)  - no hero illustration (K3)
+//  - no literal head/brain. Self-similarity is FELT, not diagrammed.
+
+// ---------- colour helpers ----------
+const clamp = (n) => Math.max(0, Math.min(255, Math.round(n)))
+const hex2rgb = (h) => {
+  const n = parseInt(h.slice(1), 16)
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255]
+}
+const rgb2hex = (r, g, b) =>
+  '#' + [r, g, b].map((v) => clamp(v).toString(16).padStart(2, '0')).join('')
+export function mix(aHex, bHex, t) {
+  const a = hex2rgb(aHex), b = hex2rgb(bHex)
+  return rgb2hex(a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t)
+}
+export const lighten = (h, t) => mix(h, '#ffffff', t)
+export const darken = (h, t) => mix(h, '#000000', t)
+
+// ---------- seeded PRNG (deterministic renders) ----------
+function mulberry32(seed) {
+  let a = seed >>> 0
+  return () => {
+    a |= 0; a = (a + 0x6d2b79f5) | 0
+    let t = Math.imul(a ^ (a >>> 15), 1 | a)
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+// ---------- soft light pool (depth, not poster) ----------
+export function softLight(uid, { w, h, cx, cy, rx, ry, color, opacity }) {
+  const id = `lp-${uid}`
+  const defs = `<radialGradient id="${id}" cx="50%" cy="50%" r="50%">
+    <stop offset="0%" stop-color="${color}" stop-opacity="${opacity}"/>
+    <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+  </radialGradient>`
+  const body = `<ellipse cx="${cx}" cy="${cy}" rx="${rx}" ry="${ry}" fill="url(#${id})"/>`
+  return { defs, body }
+}
+
+// ---------- graph-fractal HAZE ----------
+// A self-similar branching field rooted along the bottom edge, growing upward.
+// Rendered blurred + very low opacity so it reads as atmosphere, never as nodes
+// or a single "tree growing from a thing".
+export function hazeFractal(uid, { w, h, color, opacity = 0.1, blur = 3, seed = 7 }) {
+  const rnd = mulberry32(seed)
+  const segs = []
+  const maxDepth = 7
+  function branch(x, y, ang, len, depth) {
+    const x2 = x + Math.cos(ang) * len
+    const y2 = y + Math.sin(ang) * len
+    segs.push(`M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`)
+    if (depth <= 0) return
+    const kids = 2 + (rnd() < 0.4 ? 1 : 0)
+    for (let i = 0; i < kids; i++) {
+      const spread = (0.32 + rnd() * 0.30)
+      const da = (i - (kids - 1) / 2) * spread + (rnd() - 0.5) * 0.18
+      branch(x2, y2, ang + da, len * (0.70 + rnd() * 0.10), depth - 1)
+    }
+  }
+  // several asymmetric roots across the bottom → a field, not one object
+  const roots = 5
+  for (let i = 0; i < roots; i++) {
+    const rx = w * (0.10 + 0.80 * ((i + rnd() * 0.6) / roots))
+    branch(rx, h * (0.99 + rnd() * 0.01), -Math.PI / 2 + (rnd() - 0.5) * 0.5, h * (0.13 + rnd() * 0.05), maxDepth)
+  }
+  const fid = `hz-${uid}`
+  const defs = `<filter id="${fid}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${blur}"/></filter>`
+  const body = `<g filter="url(#${fid})" opacity="${opacity}" stroke="${color}" stroke-width="1.4" fill="none" stroke-linecap="round">
+    <path d="${segs.join(' ')}"/>
+  </g>`
+  return { defs, body }
+}
+
+// ---------- geometric SELF-SIMILARITY (depth/light, not frames) ----------
+// Golden-rectangle subdivision: carve a square off the long side repeatedly.
+// Each carved block gets a tiny tonal step → a self-similar field of light,
+// asymmetric, soft. No outlines.
+export function geoDepth(uid, { w, h, palette, steps = 9, strength = 0.05 }) {
+  const toward = palette.dark ? '#ffffff' : '#000000'
+  let x = 0, y = 0, rw = w, rh = h
+  let side = 'left'
+  const rects = []
+  for (let i = 0; i < steps; i++) {
+    const t = (strength * (i + 1)) / steps
+    const fill = mix(palette.bg, toward, t)
+    let bx = x, by = y, bw = rw, bh = rh
+    if (rw >= rh) {
+      const s = rh
+      if (side === 'left') { bx = x; bw = s; x += s }
+      else { bx = x + rw - s; bw = s }
+      rw -= s
+      side = side === 'left' ? 'right' : 'left'
+    } else {
+      const s = rw
+      if (side === 'left') { by = y; bh = s; y += s }
+      else { by = y + rh - s; bh = s }
+      rh -= s
+      side = side === 'left' ? 'right' : 'left'
+    }
+    rects.push(`<rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${bw.toFixed(1)}" height="${bh.toFixed(1)}" fill="${fill}"/>`)
+  }
+  const fid = `gd-${uid}`
+  const defs = `<filter id="${fid}"><feGaussianBlur stdDeviation="${Math.round(w * 0.012)}"/></filter>`
+  // blur the whole field heavily so blocks read as soft light, never as frames
+  const body = `<g filter="url(#${fid})" opacity="0.9">${rects.join('')}</g>`
+  return { defs, body }
+}

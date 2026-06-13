@@ -12,20 +12,31 @@ export const palettes = JSON.parse(
 // Exact text from the brief — wording and hierarchy preserved.
 export const text = {
   title: 'Nature of Product',
-  titleLines: ['Nature of', 'Product'],
+  titleLines: ['Nature', 'of', 'Product'], // commanding 3-line stack (cf. strong ref)
   subtitle: 'How to Build Products So Valuable They Look Like Magic',
   subtitleLines: ['How to Build Products So Valuable', 'They Look Like Magic'],
   author: 'Ivan Zamesin',
 }
 
-// ≤ 2 families. Serif leads the title; restrained grotesque for subtitle/author.
-export const fonts = {
-  serif: 'Fraunces',
-  sans: 'Inter',
+// Baked static instances (see scripts/build-fonts.py). Unique family names so
+// resvg selects them directly (it ignores font-weight on variable fonts).
+export const families = {
+  titleLight: 'Fraunces Display Light',
+  title: 'Fraunces Display',
+  serifText: 'Fraunces Text',
+  serifCaps: 'Fraunces Text Medium',
+  sansBook: 'Inter Book',
+  sansMedium: 'Inter Medium',
+}
+
+// Two type pairings (≤2 per round, per the skill). All-serif = one family,
+// cohesive/editorial (matches the strong reference). Serif+sans = cleaner/modern.
+export const pairings = {
+  allSerif: { title: families.title, sub: families.serifText, author: families.serifCaps },
+  serifSans: { title: families.title, sub: families.sansBook, author: families.sansMedium },
 }
 
 // Front-cover concept / ebook ratio is the priority (1.6:1).
-// Print (6.25×9.25in @300dpi = 1875×2775) is adapted later in Block C.
 export const canvas = {
   ebook: { w: 1600, h: 2560 },
   print: { w: 1875, h: 2775 },

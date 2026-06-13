@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="2560" viewBox="0 0 1600 2560">
+  <defs></defs>
+  <rect width="1600" height="2560" fill="#EDE7DA"/>
+  
+  <text x="152" y="599" text-anchor="start" font-family="Fraunces Display" font-size="253" fill="#211F1B" letter-spacing="-1.27"><tspan x="152" dy="0">Nature</tspan><tspan x="152" dy="228">of</tspan><tspan x="152" dy="228">Product</tspan></text>
+  <line x1="152" y1="1161" x2="312" y2="1161" stroke="#355049" stroke-width="2"/>
+  <text x="152" y="1242" text-anchor="start" font-family="Inter Book" font-size="49" fill="#211F1B" opacity="0.82" letter-spacing="0.49"><tspan x="152" dy="0">How to Build Products So Valuable</tspan><tspan x="152" dy="70">They Look Like Magic</tspan></text>
+  <text x="152" y="2408" text-anchor="start" font-family="Inter Medium" font-size="38" fill="#211F1B" opacity="0.66" letter-spacing="5.32">IVAN ZAMESIN</text>
+</svg>

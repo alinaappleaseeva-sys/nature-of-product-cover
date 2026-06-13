@@ -1,5 +1,23 @@
 {
-  "A": { "name": "Warm paper + ink", "bg": "#F4EFE6", "ink": "#1C1B19", "accent": "#1F4E46" },
-  "B": { "name": "Deep monochrome", "bg": "#0E1B2A", "ink": "#EDE8DE", "accent": "#3A5A6B" },
-  "C": { "name": "Cool restrained", "bg": "#E7ECE8", "ink": "#23282A", "accent": "#3E6F66" }
+  "warmDark": {
+    "name": "Warm near-black + cream/gold",
+    "bg": "#15120D",
+    "ink": "#ECE3D1",
+    "accent": "#B5894F",
+    "dark": true
+  },
+  "greenDark": {
+    "name": "Deep green-black + bone",
+    "bg": "#0F1A14",
+    "ink": "#E9E4D7",
+    "accent": "#8A9B79",
+    "dark": true
+  },
+  "paper": {
+    "name": "Warm paper + ink + deep teal",
+    "bg": "#EDE7DA",
+    "ink": "#211F1B",
+    "accent": "#355049",
+    "dark": false
+  }
 }
