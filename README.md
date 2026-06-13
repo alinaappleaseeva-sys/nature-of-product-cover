@@ -1,0 +1,65 @@
+# Nature of Product — Book Cover (contest)
+
+Cover design for **Ivan Zamesin — *Nature of Product*** (*How to Build Products So
+Valuable They Look Like Magic*). Premium business nonfiction; the cover should sit
+naturally next to *Atomic Habits*, *Thinking, Fast and Slow*, *The Innovator's
+Dilemma* and Stripe Press titles: calm, intelligent, premium, restrained.
+**Typography leads; the conceptual motif (a barely noticeable fractal / self-similar
+structure echoing the book's Job Graph) supports it.**
+
+> **Status:** 🟡 in progress — Block A (setup → competitor analysis → contact sheet).
+> See [`docs/changelog.md`](docs/changelog.md) for the running log.
+
+## What we deliver
+
+| Artifact | Spec |
+|---|---|
+| Front-cover concept (priority) | final design |
+| Ebook cover | 1600 × 2560 px (1.6:1), **RGB**, PNG |
+| Print front | 6 × 9 in trade paperback, 300 DPI, **CMYK**, 0.125 in bleed → 6.25 × 9.25 in = 1875 × 2775 px, PDF |
+| Editable source | master SVG with **live text** + a separate final outlined PDF for print |
+
+Full wrap (front + spine + back) is out of scope until page count & paper are confirmed.
+
+## How it's made
+
+The cover is generated as **editable SVG** (typography + an algorithmic, genuinely
+self-similar motif layer), rendered to PNG/PDF. Everything is versioned in git.
+
+```bash
+npm install
+npm run render        # SVG → PNG previews (RGB) into exports/ and explorations/
+npm run test:visual   # thumbnail / grayscale / blur-squint checks
+# print (CMYK) pipeline is added late, in Block C
+```
+
+## Repository layout
+
+```
+.claude/skills/book-cover-premium-nonfiction/  Local design skill (taste + brief + review rubric)
+brief/                Original contest brief
+design-principles.md  Invariants — what must not break (+ agent brief)
+design.md             Current chosen solution (colors/fonts/sizes/spacing)
+concept/              Competitor analysis, rationale, moodboard, typography notes
+src/                  lib/ (generators + layout), covers/ (master SVGs), palettes.json
+assets/               fonts/ (OFL) + icc/ (CMYK profile)
+scripts/              render.mjs, tests.mjs, export-print.sh (late)
+exports/              ebook/ print/ thumbnails/  (curated final outputs)
+explorations/         versioned iterations (v1 contact sheet, v2, …)
+docs/changelog.md     decision & version log
+```
+
+## Design guardrails
+
+This project carries a local Claude Code skill,
+[`book-cover-premium-nonfiction`](.claude/skills/book-cover-premium-nonfiction/SKILL.md),
+that encodes the brief, the taste, the anti-cliché rules, and a strict review rubric
+(6 axes × 1–5; a direction is only a finalist at ≥4 on *premium feel* and *thumbnail
+readability*). It exists to **fix** the brief and taste so iterations don't drift —
+not to replace judgement.
+
+## License
+
+Pipeline **code** is MIT (see [`LICENSE`](LICENSE)). The **cover design artwork** is a
+contest submission — all rights reserved by the author. Fonts are under the SIL Open
+Font License (see `assets/fonts/`).

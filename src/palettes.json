@@ -1,0 +1,5 @@
+{
+  "A": { "name": "Warm paper + ink", "bg": "#F4EFE6", "ink": "#1C1B19", "accent": "#1F4E46" },
+  "B": { "name": "Deep monochrome", "bg": "#0E1B2A", "ink": "#EDE8DE", "accent": "#3A5A6B" },
+  "C": { "name": "Cool restrained", "bg": "#E7ECE8", "ink": "#23282A", "accent": "#3E6F66" }
+}
