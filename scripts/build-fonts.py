@@ -17,6 +17,7 @@ FONTS = "assets/fonts"
 INSTANCES = {
     # Title — display optical size, high contrast, restrained weights
     "Fraunces Display Light": ("Fraunces.ttf", {"opsz": 144, "wght": 330, "SOFT": 0, "WONK": 0}),
+    "Fraunces Display Book":  ("Fraunces.ttf", {"opsz": 144, "wght": 390, "SOFT": 0, "WONK": 0}),
     "Fraunces Display":       ("Fraunces.ttf", {"opsz": 144, "wght": 440, "SOFT": 0, "WONK": 0}),
     # Serif text — for all-serif subtitle/author option
     "Fraunces Text":          ("Fraunces.ttf", {"opsz": 28,  "wght": 400, "SOFT": 0, "WONK": 0}),

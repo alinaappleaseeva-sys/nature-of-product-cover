@@ -22,6 +22,7 @@ export const text = {
 // resvg selects them directly (it ignores font-weight on variable fonts).
 export const families = {
   titleLight: 'Fraunces Display Light',
+  titleBook: 'Fraunces Display Book',
   title: 'Fraunces Display',
   serifText: 'Fraunces Text',
   serifCaps: 'Fraunces Text Medium',

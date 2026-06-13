@@ -42,35 +42,58 @@ export function softLight(uid, { w, h, cx, cy, rx, ry, color, opacity }) {
 
 // ---------- graph-fractal HAZE ----------
 // A self-similar branching field rooted along the bottom edge, growing upward.
-// Rendered blurred + very low opacity so it reads as atmosphere, never as nodes
-// or a single "tree growing from a thing".
-export function hazeFractal(uid, { w, h, color, opacity = 0.1, blur = 3, seed = 7 }) {
+// Blurred + very low opacity so it reads as atmosphere, never nodes or a single
+// "tree growing from a thing".
+//   mode 'organic'    — softly irregular (risk: reads as a literal tree)
+//   mode 'structured' — fixed angles/ratios → reads as self-similar STRUCTURE
+//   fadeTopFrac       — vertical fade: dense at bottom, gone by this y-fraction
+//   reach/depth/roots — control how high it climbs and how dense the field is
+export function hazeFractal(uid, {
+  w, h, color, opacity = 0.1, blur = 3, seed = 7,
+  mode = 'organic', reach = 0.15, depth = 7, roots = 5,
+  fadeTopFrac = null, strokeW = 1.4,
+}) {
   const rnd = mulberry32(seed)
   const segs = []
-  const maxDepth = 7
-  function branch(x, y, ang, len, depth) {
+  const ANG = 0.38 // fixed branch half-angle for structured mode
+  const RATIO = 0.72
+  function branch(x, y, ang, len, d) {
     const x2 = x + Math.cos(ang) * len
     const y2 = y + Math.sin(ang) * len
     segs.push(`M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`)
-    if (depth <= 0) return
-    const kids = 2 + (rnd() < 0.4 ? 1 : 0)
-    for (let i = 0; i < kids; i++) {
-      const spread = (0.32 + rnd() * 0.30)
-      const da = (i - (kids - 1) / 2) * spread + (rnd() - 0.5) * 0.18
-      branch(x2, y2, ang + da, len * (0.70 + rnd() * 0.10), depth - 1)
+    if (d <= 0) return
+    if (mode === 'structured') {
+      for (const s of [-1, 1]) {
+        branch(x2, y2, ang + s * ANG + (rnd() - 0.5) * 0.06, len * RATIO, d - 1)
+      }
+    } else {
+      const kids = 2 + (rnd() < 0.4 ? 1 : 0)
+      for (let i = 0; i < kids; i++) {
+        const spread = 0.32 + rnd() * 0.30
+        const da = (i - (kids - 1) / 2) * spread + (rnd() - 0.5) * 0.18
+        branch(x2, y2, ang + da, len * (0.70 + rnd() * 0.10), d - 1)
+      }
     }
   }
-  // several asymmetric roots across the bottom → a field, not one object
-  const roots = 5
   for (let i = 0; i < roots; i++) {
-    const rx = w * (0.10 + 0.80 * ((i + rnd() * 0.6) / roots))
-    branch(rx, h * (0.99 + rnd() * 0.01), -Math.PI / 2 + (rnd() - 0.5) * 0.5, h * (0.13 + rnd() * 0.05), maxDepth)
+    const jitter = mode === 'structured' ? (rnd() - 0.5) * 0.12 : (rnd() - 0.5) * 0.6
+    const rx = w * (0.06 + 0.88 * ((i + (mode === 'structured' ? 0.5 : rnd() * 0.6)) / roots))
+    const baseAng = -Math.PI / 2 + jitter
+    branch(rx, h * (0.99 + rnd() * 0.01), baseAng, h * (reach + rnd() * 0.03), depth)
   }
   const fid = `hz-${uid}`
-  const defs = `<filter id="${fid}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${blur}"/></filter>`
-  const body = `<g filter="url(#${fid})" opacity="${opacity}" stroke="${color}" stroke-width="1.4" fill="none" stroke-linecap="round">
+  let defs = `<filter id="${fid}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${blur}"/></filter>`
+  let maskAttr = ''
+  if (fadeTopFrac != null) {
+    const mid = `hzm-${uid}`
+    defs += `<linearGradient id="${mid}-g" x1="0" y1="${h}" x2="0" y2="${h * fadeTopFrac}" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></linearGradient>
+      <mask id="${mid}"><rect width="${w}" height="${h}" fill="url(#${mid}-g)"/></mask>`
+    maskAttr = ` mask="url(#${mid})"`
+  }
+  const body = `<g${maskAttr}><g filter="url(#${fid})" opacity="${opacity}" stroke="${color}" stroke-width="${strokeW}" fill="none" stroke-linecap="round">
     <path d="${segs.join(' ')}"/>
-  </g>`
+  </g></g>`
   return { defs, body }
 }
 

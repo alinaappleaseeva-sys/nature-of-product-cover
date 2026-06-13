@@ -1,23 +1,27 @@
-// SVG → PNG previews (RGB). Run from repo root: `npm run render`.
+// Canonical build: render the locked lead (and fallback) to master SVG + RGB PNG
+// previews. Run from repo root: `npm run render`.
 import { Resvg } from '@resvg/resvg-js'
 import { writeFileSync, mkdirSync } from 'node:fs'
-import { buildCover } from '../src/lib/layout.mjs'
-import { palettes, text, fonts, canvas } from '../src/lib/tokens.mjs'
+import { buildLead, buildFallback } from '../src/lib/covers.mjs'
+import { canvas } from '../src/lib/tokens.mjs'
 
+mkdirSync('src/covers', { recursive: true })
 mkdirSync('exports/ebook', { recursive: true })
 mkdirSync('exports/thumbnails', { recursive: true })
 
-const fontOpts = { fontDirs: ['assets/fonts'], loadSystemFonts: false, defaultFontFamily: fonts.serif }
-const { w, h } = canvas.ebook
+const fontOpts = { fontDirs: ['assets/fonts'], loadSystemFonts: false, defaultFontFamily: 'Fraunces Display' }
+const png = (svg, width) => new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: fontOpts }).render().asPng()
+const { w } = canvas.ebook
 
-function png(svg, width) {
-  return new Resvg(svg, { fitTo: { mode: 'width', value: width }, font: fontOpts }).render().asPng()
-}
+// Lead — master (live text) + full-res RGB + thumbnail
+const lead = buildLead('ebook')
+writeFileSync('src/covers/ebook.svg', lead)                              // master, live text
+writeFileSync('exports/ebook/nature-of-product-ebook.png', png(lead, w)) // 1600×2560 RGB
+writeFileSync('exports/thumbnails/nature-of-product-120.png', png(lead, 120))
 
-for (const key of Object.keys(palettes)) {
-  const svg = buildCover({ palette: palettes[key], fonts, text, w, h, align: 'left' })
-  writeFileSync(`exports/ebook/foundation-${key}.svg`, svg)
-  writeFileSync(`exports/ebook/foundation-${key}.png`, png(svg, w))
-  writeFileSync(`exports/thumbnails/foundation-${key}-120.png`, png(svg, 120))
-  console.log(`rendered foundation-${key} (${palettes[key].name})`)
-}
+// Fallback (light)
+const fb = buildFallback('ebook')
+writeFileSync('src/covers/ebook-fallback.svg', fb)
+writeFileSync('exports/ebook/nature-of-product-ebook-fallback.png', png(fb, w))
+
+console.log('rendered lead (ebook 1600×2560) + fallback + thumbnail')

@@ -56,5 +56,31 @@ Rubric (premium·hier·thumb·concept·shelf·orig):
 - C2 geo paper 4·5·4.5·2.5·4·3
 - Recommend B1 primary, B2 palette sibling, A1 fallback; drop geometric (C).
 
-### Next
-- Checkpoint 1 (before sleep): user picks direction+palette+pairing + overnight latitude.
+### Checkpoint 1 — decided
+- Primary: **B2 (haze green-dark)**. Mandate: refine primary + keep a polished light
+  fallback (A2). Three notes from user: (1) dissolve/geometrize the branching into
+  structure, (2) lower the motif so it doesn't fight the title, (3) verify cream-on-green
+  thumbnail contrast.
+
+### Block B — overnight refinement (autonomous)
+- Motif: added **structured** mode (fixed angle/ratio → self-similar, not a tree) +
+  **vertical fade mask** (dense low, gone by 0.60·h) → notes (1) & (2) addressed.
+- Greener ground `#13271C` (near-black greens lose green identity at thumbnail);
+  subtitle lifted to `lighten(accent,0.16)` for legibility → note (3) addressed.
+- Title weight test 330/390/440 at 150/88/60px + blur → **390 (Display Book)** is the
+  elegance-vs-thumbnail sweet spot. Baked new instance.
+- Perceptual checks: 120/96/64px, grayscale, blur/squint — title holds, premium in gray.
+- Finalists rendered → `explorations/v3-finalists/` (F1/F2/F3/F4 + _compare/_perceptual/_weight).
+- Lead locked → `src/covers/ebook.svg` (master, live text); RGB draft →
+  `exports/ebook/nature-of-product-ebook.png` (1600×2560). `design.md` updated.
+- Canonical build refactor: `src/lib/covers.mjs` (buildLead/buildFallback) shared by render.
+
+### For the morning (Checkpoint 2)
+- Review `explorations/v3-finalists/_compare.png` + lead `exports/ebook/nature-of-product-ebook.png`.
+- Decide: lead green vs paper fallback; haze opacity 0.10–0.13; any title-weight tweak.
+- Then Block C: print/CMYK layer (6.25×9.25 @300dpi, bleed), outlined PDF, package, v1.0.
+
+### Open questions (non-blocking, for morning)
+- Haze visibility: currently "discoverable" (opacity 0.12). Dial to 0.10 if you want it
+  more subliminal.
+- Author line: keep all-serif caps, or switch to Inter caps for a touch more contrast?

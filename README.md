@@ -7,8 +7,10 @@ Dilemma* and Stripe Press titles: calm, intelligent, premium, restrained.
 **Typography leads; the conceptual motif (a barely noticeable fractal / self-similar
 structure echoing the book's Job Graph) supports it.**
 
-> **Status:** 🟡 in progress — Block A (setup → competitor analysis → contact sheet).
-> See [`docs/changelog.md`](docs/changelog.md) for the running log.
+> **Status:** 🟢 Block B done — lead locked (deep-green, structured haze). Awaiting
+> Checkpoint 2 (morning) to pick the final, then Block C (print/CMYK + packaging).
+> Lead preview: `exports/ebook/nature-of-product-ebook.png`. Finalists:
+> `explorations/v3-finalists/`. Running log: [`docs/changelog.md`](docs/changelog.md).
 
 ## What we deliver
 

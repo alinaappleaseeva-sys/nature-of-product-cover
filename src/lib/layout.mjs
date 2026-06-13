@@ -14,7 +14,7 @@ const esc = (s) =>
  * @param {{defs:string,body:string}} [o.back]  motif layer behind the type
  * @param {boolean} [o.rule]  short accent hairline under the title
  */
-export function buildCover({ palette, type, text, w = 1600, h = 2560, align = 'left', back = { defs: '', body: '' }, rule = true }) {
+export function buildCover({ palette, type, text, w = 1600, h = 2560, align = 'left', back = { defs: '', body: '' }, rule = true, subColor = null }) {
   const m = Math.round(w * 0.095)
   const center = align === 'center'
   const x = center ? Math.round(w / 2) : m
@@ -42,8 +42,8 @@ export function buildCover({ palette, type, text, w = 1600, h = 2560, align = 'l
     ? `<line x1="${ruleX1}" y1="${ruleY}" x2="${ruleX1 + ruleW}" y2="${ruleY}" stroke="${palette.accent}" stroke-width="${Math.max(2, Math.round(w * 0.0015))}"/>`
     : ''
 
-  // subtitle (accent on dark, ink on light)
-  const subColor = palette.dark ? palette.accent : palette.ink
+  // subtitle (accent on dark, ink on light; overridable)
+  const subC = subColor || (palette.dark ? palette.accent : palette.ink)
   const subOpacity = palette.dark ? 1 : 0.82
   const subY = ruleY + Math.round(subSize * 1.65)
   const subTSpans = text.subtitleLines
@@ -60,7 +60,7 @@ export function buildCover({ palette, type, text, w = 1600, h = 2560, align = 'l
   ${back.body}
   <text x="${x}" y="${titleTop}" text-anchor="${anchor}" font-family="${type.title}" font-size="${titleSize}" fill="${palette.ink}" letter-spacing="${(-titleSize * 0.005).toFixed(2)}">${titleTSpans}</text>
   ${ruleEl}
-  <text x="${x}" y="${subY}" text-anchor="${anchor}" font-family="${type.sub}" font-size="${subSize}" fill="${subColor}" opacity="${subOpacity}" letter-spacing="${(subSize * 0.01).toFixed(2)}">${subTSpans}</text>
+  <text x="${x}" y="${subY}" text-anchor="${anchor}" font-family="${type.sub}" font-size="${subSize}" fill="${subC}" opacity="${subOpacity}" letter-spacing="${(subSize * 0.01).toFixed(2)}">${subTSpans}</text>
   <text x="${x}" y="${authorY}" text-anchor="${anchor}" font-family="${type.author}" font-size="${authorSize}" fill="${palette.ink}" opacity="0.66" letter-spacing="${(authorSize * 0.14).toFixed(2)}">${author}</text>
 </svg>`
 }
