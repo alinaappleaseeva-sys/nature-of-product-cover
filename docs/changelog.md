@@ -25,6 +25,20 @@ Running log of design decisions, iterations, and open questions. Newest first.
 ### Open questions (for later, non-blocking)
 - _none yet_
 
+### Block A — Checkpoint 0 done (competitor analysis)
+- Reviewed 1 strong + 3 weak competitor covers (all for the same book) →
+  `concept/competitor-analysis.md`.
+- Strong (dark, cinematic, faint dendrite from a head): take the atmosphere, drop the
+  literal head/brain.
+- Weak K1 (node-graph), K2 (nested frames), K3 (romanesco illustration): all too
+  literal → infographic / decorative / art-poster. All read AI-slop.
+- **Direction reweight:** typographic-only is now front-runner; graph survives only as
+  true *haze* (never visible nodes); geometric must make depth/light, not frames;
+  natural fractal demoted to texture-only.
+- **Net recipe:** deep monochrome + refined high-contrast serif leading + ultra-subtle
+  embedded atmospheric self-similar texture + soft light for depth.
+
 ### Next
-- Checkpoint 0: competitor analysis (1 good + 3 bad) from user → `concept/competitor-analysis.md`.
-- Then typographic foundation + 3 directions → contact sheet (Checkpoint 1, before sleep).
+- Fix Fraunces weight control (variable-font default renders too heavy) → use lighter,
+  higher-contrast title.
+- Build 3 directions per reweight → contact sheet (Checkpoint 1, before sleep).
