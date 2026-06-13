@@ -51,12 +51,16 @@ docs/changelog.md     decision & version log
 
 ## Design guardrails
 
-This project carries a local Claude Code skill,
-[`book-cover-premium-nonfiction`](.claude/skills/book-cover-premium-nonfiction/SKILL.md),
-that encodes the brief, the taste, the anti-cliché rules, and a strict review rubric
-(6 axes × 1–5; a direction is only a finalist at ≥4 on *premium feel* and *thumbnail
-readability*). It exists to **fix** the brief and taste so iterations don't drift —
-not to replace judgement.
+This project carries two local Claude Code skills:
+
+- **[`book-cover-premium-nonfiction`](.claude/skills/book-cover-premium-nonfiction/SKILL.md)**
+  (primary) — encodes the brief, the taste, the anti-cliché rules, and a strict review
+  rubric (6 axes × 1–5; a direction is only a finalist at ≥4 on *premium feel* and
+  *thumbnail readability*). It **fixes** the brief and taste so iterations don't drift.
+- **[`emil-design-eng`](.claude/skills/emil-design-eng/SKILL.md)** (secondary, by
+  [Emil Kowalski](https://emilkowal.ski/skill)) — used as a **critic & polisher** for
+  taste, typographic precision, micro-polish and anti-slop thinking. Not the main
+  author. Reviewed as open-source before install: text-only, no scripts/hooks.
 
 ## License
 

@@ -15,6 +15,13 @@ Running log of design decisions, iterations, and open questions. Newest first.
   (typographic-only / graph-fractal haze / geometric self-similarity) · several
   palettes · CMYK/print deferred to Block C · public repo on `alinaappleaseeva-sys`.
 
+### Block A — second skill installed
+- Reviewed and installed `emil-design-eng` (Emil Kowalski, github.com/emilkowalski/skill)
+  as a project-local **secondary** skill — critic/polisher for taste, typographic
+  precision, micro-polish, anti-slop. Security review: text-only SKILL.md, no
+  scripts/hooks/executables, no `allowed-tools`. Primary author remains
+  `book-cover-premium-nonfiction`.
+
 ### Open questions (for later, non-blocking)
 - _none yet_
 
