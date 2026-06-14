@@ -7,26 +7,27 @@ Dilemma* and Stripe Press titles: calm, intelligent, premium, restrained.
 **Typography leads; the conceptual motif (a barely noticeable fractal / self-similar
 structure echoing the book's Job Graph) supports it.**
 
+![Nature of Product — cover](exports/ebook/nature-of-product-ebook.png)
+
+## Deliverables for submission
+
+| File | Spec |
+|---|---|
+| [exports/ebook/nature-of-product-ebook.png](exports/ebook/nature-of-product-ebook.png) | 1600×2560 px · RGB · PNG — ebook cover |
+| [exports/print/nature-of-product-print.pdf](exports/print/nature-of-product-print.pdf) | 6.25×9.25 in · 300 DPI · CMYK · PDF — print front with bleed |
+| [exports/source/nature-of-product-live-text.svg](exports/source/nature-of-product-live-text.svg) | live text · vector — editable master |
+
+## Working artifacts
+
+| File | Note |
+|---|---|
+| [exports/ebook/thumbnail-120px.png](exports/ebook/thumbnail-120px.png) | legibility QC check |
+| [exports/print/nature-of-product-print-preview.png](exports/print/nature-of-product-print-preview.png) | visual proof (150 DPI raster from CMYK PDF) |
+| [exports/print/nature-of-product-outlined.svg](exports/print/nature-of-product-outlined.svg) | text → outlines, for print shop if needed |
+
 > **Status:** ✅ v1.0 — final deliverables shipped (warm near-black, typography-first,
 > dense-bridge nodegraph motif in lower third).
 > Running log: [`docs/changelog.md`](docs/changelog.md).
->
-> ![cover](exports/ebook/nature-of-product-ebook.png)
-
-## Deliverables
-
-| File | Spec | Intended use |
-|------|------|--------------|
-| [`exports/ebook/nature-of-product-ebook.png`](exports/ebook/nature-of-product-ebook.png) | 1600×2560 px · RGB · PNG | Ebook platforms (KDP, Kobo, Apple Books) |
-| [`exports/ebook/thumbnail-120px.png`](exports/ebook/thumbnail-120px.png) | 120 px wide · RGB · PNG | Thumbnail legibility check |
-| [`exports/print/nature-of-product-print.pdf`](exports/print/nature-of-product-print.pdf) | 6.25×9.25 in · **CMYK** · vector PDF | Print-shop submission (front cover, bleed included) |
-| [`exports/print/nature-of-product-print-preview.png`](exports/print/nature-of-product-print-preview.png) | 150 DPI raster from CMYK PDF | Visual proof (note: 150 DPI understates motif fineness vs actual 300 DPI print) |
-| [`exports/print/nature-of-product-outlined.svg`](exports/print/nature-of-product-outlined.svg) | 6.25×9.25 in · text → outlines · vector | Print-safe SVG; no font dependency |
-| [`exports/source/nature-of-product-live-text.svg`](exports/source/nature-of-product-live-text.svg) | 6.25×9.25 in · live text · vector | Editable master for future revisions |
-
-CMYK conversion uses Ghostscript DeviceCMYK (generic SWOP-like). The printer can
-re-profile to PSOcoated_v3 or their house profile at production.
-Regenerate all deliverables: `node scripts/build-v1.mjs`
 
 ## What we deliver
 
