@@ -41,17 +41,23 @@ All instances baked static (`scripts/build-fonts.py`) with unique family names.
 - Subtitle below the rule; author baseline at `h − margin`.
 - Generous lower field (editorial), motif lives there.
 
-## Motif (locked — G2 "lattice")
+## Motif (locked — v3 graph-haze "lattice")
 
 `hazeFractal` **structured + geometrized into a GRAPH** so it reads as network, not a
-tree (removes the biological / Nature-magazine connotation per Checkpoint 2):
+tree — and kept **barely-noticeable** so typography leads (brief: fractal must not
+dominate). Lives only in the lower field as faint texture.
 - branch half-angle **0.46**, ratio 0.72, **angle-snap to 15° grid**, **jitter 0**
 - **cross-links 0.36** between mid-canopy nodes → loops (a tree has none = graph read)
-- opacity 0.12, blur 3.5, depth 9, **13 roots**, `reach 0.09`
+- **opacity 0.14** (`HAZE_OPACITY` in covers.mjs; v3 baseline 0.12, +0.02 so it
+  survives print where it reads weaker), blur 3.5, depth 9, **13 roots**, `reach 0.09`
 - **vertical fade to 0.64·h** (dense low, dissolves before the title)
 - `softLight` pool lower-center (offset 0.42·w, cy 0.86·h) for depth
-Dials if needed: G1 "web" (angle .40 / links .20 / roots 15) more structure; G3 "mist"
-(angle .52 / links .28) softer. opacity 0.10–0.13.
+
+**Rejected exploration — v4 "lit dendrites"** (`litDendrites` in motifs.mjs, snapshot
+`explorations/v4-lit-dendrites/`): a sparse grove with directional light/volume and a
+lush focal. Beautiful but it overshot the brief — the motif became a *hero
+illustration* (spotlit tree) competing with the title, pulling the cover toward
+atmospheric/artistic and re-introducing the biological read. Reverted to v3.
 
 ## Decided at Checkpoint 2
 

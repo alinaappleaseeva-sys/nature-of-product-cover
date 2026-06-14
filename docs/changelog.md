@@ -85,7 +85,17 @@ Rubric (premium·hier·thumb·concept·shelf·orig):
   more subliminal.
 - Author line: keep all-serif caps, or switch to Inter caps for a touch more contrast?
 
-## 2026-06-14
+## 2026-06-14 (later)
+
+### Motif: explored v4, reverted to v3 (art-direction)
+- Tried v4 "lit dendrites" (directional light/volume, lush focal, staged heights) per
+  request to add volume + composition. Result overshot the brief: motif became a
+  spotlit *hero illustration* competing with the title (atmospheric/artistic, not
+  editorial; biological read returned). Snapshot kept in explorations/v4-lit-dendrites/.
+- **Reverted to v3 graph-haze** as the final; bumped haze opacity 0.12 → **0.14** (a
+  touch more presence, survives print). litDendrites kept in the motif library, unused.
+- Regenerated ALL deliverables (ebook PNG, print CMYK/RGB PDFs, outlined SVG) + shelf
+  mocks from the restored master. Verified 60/120px + grayscale + blur.
 
 ### Checkpoint 2 — decided + master locked
 - Green lead (paper fallback dropped) · haze 0.12 · all-serif author caps · title Book 390.
