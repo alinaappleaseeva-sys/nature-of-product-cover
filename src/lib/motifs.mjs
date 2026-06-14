@@ -128,6 +128,7 @@ export function litDendrites(uid, {
   w, h, light, dendrites, blur = 2, fadeTopFrac = 0.6,
   branchAngle = 0.46, ratio = 0.72, strokeW = 1.1, jitter = 0.08, gamma = 1.6, extra = 0,
   lightColor = '#EAD9B8', shadow = '#2b3a30', maxOpacity = 0.5, buckets = 7, glowOpacity = 0.2,
+  noTrunk = false,
 }) {
   const seg = Array.from({ length: buckets }, () => [])
   // brightness falls off with distance to the light, raised to gamma for contrast
@@ -144,13 +145,26 @@ export function litDendrites(uid, {
       if (rnd() < extra) kids.push((rnd() - 0.5) * 2)
       for (const s of kids) branch(x2, y2, a + s * branchAngle + (rnd() - 0.5) * jitter, len * ratio, d - 1)
     }
-    branch(dn.x * w, (dn.baseY ?? 0.99) * h, -Math.PI / 2 + (dn.lean || 0), dn.reach * h, dn.depth)
+    if (noTrunk) {
+      // Branch directly from the root point — no visible single stem.
+      // Two arms diverge immediately, so the structure reads as a network, not a tree.
+      const rx = dn.x * w, ry = (dn.baseY ?? 0.99) * h
+      const ba = -Math.PI / 2 + (dn.lean || 0), len = dn.reach * h
+      branch(rx, ry, ba - branchAngle + (rnd() - 0.5) * jitter, len * ratio, dn.depth - 1)
+      branch(rx, ry, ba + branchAngle + (rnd() - 0.5) * jitter, len * ratio, dn.depth - 1)
+    } else {
+      branch(dn.x * w, (dn.baseY ?? 0.99) * h, -Math.PI / 2 + (dn.lean || 0), dn.reach * h, dn.depth)
+    }
   }
-  const fid = `ld-${uid}`, mid = `ldm-${uid}`, gid = `ldg-${uid}`
-  let defs = `<filter id="${fid}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${blur}"/></filter>`
+  const fid = `ld-${uid}`, mid = `ldm-${uid}`, gid = `ldg-${uid}`, cid = `ldc-${uid}`
+  const pad = blur * 6
+  // filterUnits="userSpaceOnUse" with explicit canvas-relative bounds avoids Resvg
+  // geometry panics when branches extend far outside the SVG viewport.
+  let defs = `<filter id="${fid}" filterUnits="userSpaceOnUse" x="${-pad}" y="${-pad}" width="${w + pad * 2}" height="${h + pad * 2}"><feGaussianBlur stdDeviation="${blur}"/></filter>`
+  defs += `<clipPath id="${cid}"><rect width="${w}" height="${h}"/></clipPath>`
   defs += `<linearGradient id="${mid}-g" x1="0" y1="${h}" x2="0" y2="${fadeTopFrac * h}" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></linearGradient><mask id="${mid}"><rect width="${w}" height="${h}" fill="url(#${mid}-g)"/></mask>`
   defs += `<radialGradient id="${gid}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${lightColor}" stop-opacity="${glowOpacity}"/><stop offset="55%" stop-color="${lightColor}" stop-opacity="${(glowOpacity * 0.25).toFixed(3)}"/><stop offset="100%" stop-color="${lightColor}" stop-opacity="0"/></radialGradient>`
-  let body = `<g mask="url(#${mid})"><ellipse cx="${light.x}" cy="${light.y}" rx="${light.r * 0.95}" ry="${light.r * 0.72}" fill="url(#${gid})"/><g filter="url(#${fid})" fill="none" stroke-linecap="round">`
+  let body = `<g mask="url(#${mid})" clip-path="url(#${cid})"><ellipse cx="${light.x.toFixed(1)}" cy="${light.y.toFixed(1)}" rx="${(light.r * 0.95).toFixed(1)}" ry="${(light.r * 0.72).toFixed(1)}" fill="url(#${gid})"/><g filter="url(#${fid})" fill="none" stroke-linecap="round">`
   for (let i = 0; i < buckets; i++) {
     if (!seg[i].length) continue
     const b = (i + 0.5) / buckets
