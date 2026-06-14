@@ -42,12 +42,19 @@ const v4Params = {
   lightColor: '#EAD9B8', shadow: '#2b3a30', maxOpacity: 0.5, buckets: 7,
 }
 
-// ── v7 refined: apply three changes ──────────────────────────────────────────
-const v7Dendrites = v4Dendrites.map(d => ({ ...d, reach: d.reach * 0.55 }))
+// ── v7 refined: apply three changes + position adjustment ────────────────────
+// Position: center x 0.44→0.40 (dx=-0.04), center y 0.85→0.78 (baseY 0.99→0.92)
+const v7Dendrites = v4Dendrites.map(d => ({
+  ...d,
+  reach: d.reach * 0.55,
+  x: d.x - 0.04,
+  baseY: 0.92,
+}))
 
 const v7Params = {
   ...v4Params,
   dendrites: v7Dendrites,
+  light: { x: w * 0.40, y: h * 0.67, r: w * 0.72 },
   glowOpacity: 0.08,   // change 3
   noTrunk: true,       // change 1
   // change 2: reach × 0.55 applied above; x=0.44 centring preserved in v4Dendrites
