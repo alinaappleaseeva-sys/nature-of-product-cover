@@ -162,6 +162,69 @@ export function litDendrites(uid, {
   return { defs, body: body + '</g></g>' }
 }
 
+// ---------- haze FIELD (paper-depth / self-similar dust) ----------
+// Not an object and not one centre: an all-over field of tiny self-similar sprigs,
+// distributed in self-similar clusters, in 2–3 low-contrast depth layers. Frequency
+// (not just opacity) is reduced around the text via a density mask, so the type sits
+// in genuinely quieter air. Reads as depth/grain you can't quite name.
+export function hazeField(uid, {
+  w, h, color = '#9A7B4F', avoid = [], density = 1, blur = 0.8, seed = 1,
+}) {
+  const distRect = (px, py, r) => {
+    const dx = Math.max(r.x - px, 0, px - (r.x + r.w))
+    const dy = Math.max(r.y - py, 0, py - (r.y + r.h))
+    return Math.hypot(dx, dy)
+  }
+  const inner = w * 0.02, falloff = w * 0.11
+  const keep = (px, py, rnd) => {
+    let d = Infinity
+    for (const r of avoid) d = Math.min(d, distRect(px, py, r))
+    const p = Math.max(0, Math.min(1, (d - inner) / falloff))
+    return rnd() < p
+  }
+  // a tiny self-similar sprig (micro fractal) at (x,y)
+  const sprig = (x, y, ang, len, d, acc) => {
+    const x2 = x + Math.cos(ang) * len, y2 = y + Math.sin(ang) * len
+    acc.push(`M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`)
+    if (d <= 0) return
+    sprig(x2, y2, ang - 0.5, len * 0.68, d - 1, acc)
+    sprig(x2, y2, ang + 0.5, len * 0.68, d - 1, acc)
+  }
+  // jittered grid → even coverage (no dead voids), organic via jitter. Self-similarity
+  // lives in the sprig micro-fractals and the multi-scale layers, not in clumping.
+  const layerPoints = (n, rnd) => {
+    const aspect = h / w
+    const cols = Math.max(2, Math.round(Math.sqrt(n / aspect)))
+    const rows = Math.max(2, Math.round(cols * aspect))
+    const cw = w / cols, chh = h / rows
+    const pts = []
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) pts.push([(c + 0.12 + 0.76 * rnd()) * cw, (r + 0.12 + 0.76 * rnd()) * chh])
+    return pts
+  }
+  // far (tiny, faint) → mid → near (larger, locally stronger)
+  const layers = [
+    { n: Math.round(220 * density), len: 7, depth: 3, op: 0.030 * density, sw: 0.7 },
+    { n: Math.round(120 * density), len: 12, depth: 3, op: 0.050 * density, sw: 0.8 },
+    { n: Math.round(64 * density), len: 19, depth: 4, op: 0.075 * density, sw: 0.9 },
+  ]
+  const fid = `hf-${uid}`
+  const defs = `<filter id="${fid}" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${blur}"/></filter>`
+  let body = `<g filter="url(#${fid})" fill="none" stroke="${color}" stroke-linecap="round">`
+  let li = 0
+  for (const L of layers) {
+    const rnd = mulberry32(seed + li * 97)
+    const acc = []
+    for (const [px, py] of layerPoints(L.n, rnd)) {
+      if (px < 0 || px > w || py < 0 || py > h) continue
+      if (!keep(px, py, rnd)) continue
+      sprig(px, py, rnd() * Math.PI * 2, L.len, L.depth, acc)
+    }
+    body += `<path d="${acc.join(' ')}" stroke-width="${L.sw}" opacity="${Math.min(0.16, L.op).toFixed(3)}"/>`
+    li++
+  }
+  return { defs, body: body + '</g>' }
+}
+
 // ---------- geometric SELF-SIMILARITY (depth/light, not frames) ----------
 // Golden-rectangle subdivision: carve a square off the long side repeatedly.
 // Each carved block gets a tiny tonal step → a self-similar field of light,

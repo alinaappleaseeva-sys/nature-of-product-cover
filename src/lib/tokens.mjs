@@ -12,7 +12,7 @@ export const palettes = JSON.parse(
 // Exact text from the brief — wording and hierarchy preserved.
 export const text = {
   title: 'Nature of Product',
-  titleLines: ['Nature', 'of', 'Product'], // commanding 3-line stack (cf. strong ref)
+  titleLines: ['Nature of', 'Product'], // 2-line massive block, line-length rhythm
   subtitle: 'How to Build Products So Valuable They Look Like Magic',
   subtitleLines: ['How to Build Products So Valuable', 'They Look Like Magic'],
   author: 'Ivan Zamesin',

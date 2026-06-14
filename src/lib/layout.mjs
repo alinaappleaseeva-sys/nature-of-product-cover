@@ -8,26 +8,26 @@ const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
 /** Compute every position/size/colour for a cover. Pure data, no SVG. */
-export function coverLayout({ palette, type, text, w = 1600, h = 2560, align = 'left', back = { defs: '', body: '' }, rule = true, subColor = null }) {
+export function coverLayout({ palette, type, text, w = 1600, h = 2560, align = 'left', back = { defs: '', body: '' }, rule = true, subColor = null, titleScale = 1, subGap = 0.035, titleTopFrac = 0.135 }) {
   const m = Math.round(w * 0.095)
   const center = align === 'center'
   const x = center ? Math.round(w / 2) : m
   const anchor = center ? 'middle' : 'start'
 
-  const titleSize = Math.round(w * 0.158)
+  const titleSize = Math.round(w * 0.158 * titleScale)
   const titleLeading = Math.round(titleSize * 0.9)
   const subSize = Math.round(w * 0.0305)
   const subLeading = Math.round(subSize * 1.42)
   const authorSize = Math.round(w * 0.0235)
 
-  const titleTop = Math.round(h * 0.135) + titleSize
+  const titleTop = Math.round(h * titleTopFrac) + titleSize
   const titleBottom = titleTop + (text.titleLines.length - 1) * titleLeading
 
   const ruleY = titleBottom + Math.round(titleSize * 0.42)
   const ruleW = Math.round(w * 0.10)
   const ruleX1 = center ? x - Math.round(ruleW / 2) : x
 
-  const subY = ruleY + Math.round(subSize * 1.65) + Math.round(h * 0.035)
+  const subY = ruleY + Math.round(subSize * 1.65) + Math.round(h * subGap)
   const authorY = h - m
 
   return {

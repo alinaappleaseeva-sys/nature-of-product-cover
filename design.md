@@ -1,66 +1,57 @@
-# Design — final solution (v1.0)
+# Design — final solution (v1.2)
 
-> **Status:** ✅ FINAL. Decided at Checkpoint 2, print layer delivered. Invariants live
-> in [`design-principles.md`](design-principles.md). Master: `src/covers/ebook.svg`.
+> **Status:** ✅ FINAL. Typography-first; barely-noticeable self-similar **haze field**
+> (paper depth), not an object. Invariants: [`design-principles.md`](design-principles.md).
+> Master: `src/covers/ebook.svg`.
 
 ## Direction
 
-**B2 — graph-fractal haze, deep green.** "The strong reference cover, minus the literal
-head": deep cinematic ground + refined high-contrast serif leading + an ultra-subtle,
-*structured* (self-similar) haze concentrated in the lower third. Chosen at Checkpoint 1
-and refined per three notes (dissolve→structure, lower the motif, verify thumbnail).
+**Typographic-first, near-black, with a paper-depth haze field.** The title is the hero;
+the self-similar idea lives as an all-over, barely-noticeable field of tiny self-similar
+sprigs (felt as depth/grain, not read as an object). The lower field is alive but quiet —
+no centre, no illustration, no diagram.
 
-## Palette (locked: "green chroma")
+## Palette (locked: "ink")
 
 | Role | Value | Notes |
 |------|-------|-------|
-| Background | `#13271C` | deep green that keeps its *green* identity at thumbnail (near-black greens go muddy) |
-| Title / ink | `#ECE3D1` | warm cream — high contrast on green, holds at 60px |
-| Subtitle | `#A6B394` | `lighten(accent, 0.16)` — sage lifted for legibility |
-| Accent (rule) | `#8A9B79` | sage hairline under the title |
-
-Light fallback (A2): bg `#EDE7DA`, ink `#211F1B`, accent `#355049`.
+| Background | `#16181A` | warm near-black — most premium/authoritative; matches the audience-favourite dark register |
+| Title / ink | `#ECE6DA` | warm off-white, high contrast (holds at 60px) |
+| Subtitle / accent | `#9A7B4F` | bronze — quiet secondary voice |
+| Haze field | `#A7895C` | bronze-smoky, very low opacity |
 
 ## Typography (locked)
 
-One family (Fraunces) → counts as 1; cohesive/editorial.
+One family (Fraunces). Title **2 lines** "Nature of / Product" — a massive block in the
+top ~45%, line-length rhythm.
 
-| Element | Font | Size @1600w | Notes |
-|---------|------|-------------|-------|
-| Title | **Fraunces Display Book** (opsz144, wght390) | 253px, leading 228 | 3-line stack "Nature / of / Product"; the 330/390/440 test picked 390 as elegance-vs-thumbnail sweet spot |
-| Subtitle | Fraunces Text (opsz28, wght400) | 49px, leading 70 | 2 lines |
-| Author | Fraunces Text Medium (wght560) | 38px | UPPERCASE, tracking 0.14em |
+| Element | Font | Notes |
+|---------|------|-------|
+| Title | Fraunces Display Book (opsz144, wght390), `titleScale 1.06` | 2-line stack, leads decisively |
+| Subtitle | Fraunces Text (opsz28, wght400) | 2 lines, bronze, big gap below title (`subGap 0.05·h`) |
+| Author | Fraunces Text Medium (wght560) | UPPERCASE, tracked, quiet, bottom |
 
-Fallback pairing uses Inter Book / Inter Medium for subtitle/author.
-All instances baked static (`scripts/build-fonts.py`) with unique family names.
+Composition: left-aligned, optical centre high (`titleTopFrac 0.125`), deliberately
+empty lower field (premium). Geometry in `coverLayout()`.
 
-## Layout (@1600×2560, scales by width)
+## Motif (locked — haze FIELD)
 
-- Margin `0.095·w` (152px). Left-aligned. Title top at `0.135·h`.
-- Sage hairline (width `0.10·w`) at `titleBottom + 0.42·titleSize`.
-- Subtitle below the rule; author baseline at `h − margin`.
-- Generous lower field (editorial), motif lives there.
+`hazeField` (src/lib/motifs.mjs): an **all-over field**, not an object.
+- Tiny self-similar **sprigs** (micro-fractal branches) → structure on a second look.
+- **Jittered-grid** distribution → even coverage, no dead voids, no blob/centre.
+- 3 depth layers (far tiny/faint → mid → near larger), bronze `#A7895C`, opacity ≈
+  0.03 / 0.05 / 0.075, `density 1.0`, blur 0.85.
+- **Density mask**: pattern *frequency* (not just opacity) is reduced around the title /
+  subtitle / author boxes → the type sits in genuinely quiet air.
 
-## Motif (locked — v3 graph-haze "lattice")
+## Journey (what we rejected, and why)
 
-`hazeFractal` **structured + geometrized into a GRAPH** so it reads as network, not a
-tree — and kept **barely-noticeable** so typography leads (brief: fractal must not
-dominate). Lives only in the lower field as faint texture.
-- branch half-angle **0.46**, ratio 0.72, **angle-snap to 15° grid**, **jitter 0**
-- **cross-links 0.36** between mid-canopy nodes → loops (a tree has none = graph read)
-- **opacity 0.14** (`HAZE_OPACITY` in covers.mjs; v3 baseline 0.12, +0.02 so it
-  survives print where it reads weaker), blur 3.5, depth 9, **13 roots**, `reach 0.09`
-- **vertical fade to 0.64·h** (dense low, dissolves before the title)
-- `softLight` pool lower-center (offset 0.42·w, cy 0.86·h) for depth
-
-**Rejected exploration — v4 "lit dendrites"** (`litDendrites` in motifs.mjs, snapshot
-`explorations/v4-lit-dendrites/`): a sparse grove with directional light/volume and a
-lush focal. Beautiful but it overshot the brief — the motif became a *hero
-illustration* (spotlit tree) competing with the title, pulling the cover toward
-atmospheric/artistic and re-introducing the biological read. Reverted to v3.
-
-## Decided at Checkpoint 2
-
-Green lead (drop paper fallback) · haze 0.12 · all-serif author caps · title Book 390.
-Micro-fixes applied: +3.5%·h air between title-rule and subtitle; haze lowered; author
-bottom margin = left margin. Master: `src/covers/ebook.svg`.
+- **v3 graph-haze** (structured + cross-links, green): correct subordination, but as a
+  single localized blur in the lower third it read as a *render artifact* — too weak to
+  work, too present to ignore; lower half felt dead.
+- **v4 lit dendrites**: beautiful lit hero with volume, but it overshot the brief — the
+  motif became an *illustration* competing with the title (atmospheric/artistic, not
+  editorial; biological read returned). Snapshot: `explorations/v4-lit-dendrites/`.
+- **v5 (this)**: motif re-conceived as a *field* (paper depth) + the palette moved to
+  neutral near-black for maximum premium/authority, title enlarged to a 2-line hero.
+  Explorations: `explorations/v5-fronts/`, `explorations/v5-haze/`.

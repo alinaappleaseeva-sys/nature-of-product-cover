@@ -1,4 +1,11 @@
 {
+  "ink": {
+    "name": "Warm near-black + off-white",
+    "bg": "#16181A",
+    "ink": "#ECE6DA",
+    "accent": "#9A7B4F",
+    "dark": true
+  },
   "warmDark": {
     "name": "Warm near-black + cream/gold",
     "bg": "#15120D",

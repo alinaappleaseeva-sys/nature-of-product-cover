@@ -7,7 +7,8 @@ Dilemma* and Stripe Press titles: calm, intelligent, premium, restrained.
 **Typography leads; the conceptual motif (a barely noticeable fractal / self-similar
 structure echoing the book's Job Graph) supports it.**
 
-> **Status:** ✅ v1.0 — final cover delivered (deep-green, graph-geometrized haze).
+> **Status:** ✅ v1.2 — final cover delivered (warm near-black, typography-first, with a
+> barely-noticeable self-similar haze *field* / paper depth).
 > Running log: [`docs/changelog.md`](docs/changelog.md).
 >
 > ![cover](exports/ebook/nature-of-product-ebook.png)

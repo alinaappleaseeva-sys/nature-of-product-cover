@@ -85,7 +85,24 @@ Rubric (premium·hier·thumb·concept·shelf·orig):
   more subliminal.
 - Author line: keep all-serif caps, or switch to Inter caps for a touch more contrast?
 
-## 2026-06-14 (later)
+## 2026-06-14 (v5 — typographic-first + haze field)
+
+### Reframed the motif as a FIELD; palette → near-black (v1.2)
+- Critique: the v3 haze read as a render artifact (blur blob, dead lower half) — too
+  weak to work, too present to ignore. Root cause: motif built as a localized object,
+  not a field.
+- New approach (art-directed): typographic-first, near-black "ink" palette, **2-line
+  massive title** (Nature of / Product), and a **haze FIELD** — `hazeField` motif: tiny
+  self-similar sprigs on a jittered grid (even coverage, no voids, no centre), 3 depth
+  layers, bronze; **density mask** reduces pattern *frequency* around the text.
+- Process per art direction: 3 clean typographic fronts (explorations/v5-fronts/) → ink
+  chosen by thumbnail/hierarchy → 3 haze densities (explorations/v5-haze/) → 4 tests →
+  density 1.0 ("felt but indescribable").
+- Composition: title scaled up + raised; bigger title→subtitle gap; emptier lower field.
+- Regenerated all deliverables (ebook PNG, print CMYK/RGB PDFs, outlined SVG) + shelf
+  mocks. CMYK soft-proof: bronze field + near-black hold. Tagged **v1.2**.
+
+## 2026-06-14 (earlier)
 
 ### Motif: explored v4, reverted to v3 (art-direction)
 - Tried v4 "lit dendrites" (directional light/volume, lush focal, staged heights) per
