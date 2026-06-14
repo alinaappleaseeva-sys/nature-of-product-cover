@@ -4,3 +4,7 @@ node_modules/
 # transient render scratch (keep curated outputs in exports/ and explorations/)
 scratch/
 tmp/
+
+# third-party competitor designs — kept local only, NOT republished in this public repo
+assets/refs/competitors/
+explorations/shelf/shelf-competitors.png

@@ -5,8 +5,11 @@
 // References are stylized evocations (network/copyright); competitors are rebuilt
 // from what was shared. All rendered at one height and stood on a shelf.
 import { Resvg } from '@resvg/resvg-js'
-import { writeFileSync, mkdirSync } from 'node:fs'
+import { writeFileSync, mkdirSync, readFileSync, existsSync } from 'node:fs'
 import { buildLead } from '../src/lib/covers.mjs'
+
+// read width/height from a PNG buffer (IHDR: big-endian uint32 @ offset 16/20)
+const pngSize = (buf) => ({ w: buf.readUInt32BE(16), h: buf.readUInt32BE(20) })
 
 mkdirSync('explorations/shelf', { recursive: true })
 const fontOpts = { fontDirs: ['assets/fonts'], loadSystemFonts: false, defaultFontFamily: 'Fraunces Display' }
@@ -123,11 +126,14 @@ function compK3() {
 function shelf(items, file) {
   const HH = 560
   const tiles = items.map((it) => {
-    const isOurs = it.ours
-    const ratio = isOurs ? 2560 / 1600 : H / W
+    if (it.img) {
+      const buf = readFileSync(it.img)
+      const { w: iw, h: ih } = pngSize(buf)
+      return { ...it, cw: Math.round(HH / (ih / iw)), ch: HH, buf } // real cover, scaled in montage
+    }
+    const ratio = it.ours ? 2560 / 1600 : H / W
     const cw = Math.round(HH / ratio)
-    const buf = png(it.svg, isOurs ? cw : Math.round(cw)) // render at target width
-    return { ...it, cw, ch: HH, buf }
+    return { ...it, cw, ch: HH, buf: png(it.svg, cw) }
   })
   const pad = 56, gap = 30
   const totalW = tiles.reduce((s, t) => s + t.cw, 0) + gap * (tiles.length - 1)
@@ -168,10 +174,17 @@ shelf([
   { label: 'Stripe Press', svg: stripePress() },
 ], 'shelf-references.png')
 
-shelf([
-  { label: 'Competitor (strong)', svg: compStrong() },
-  { label: 'K1 node-graph', svg: compK1() },
-  ours,
-  { label: 'K2 frames', svg: compK2() },
-  { label: 'K3 romanesco', svg: compK3() },
-], 'shelf-competitors.png')
+// Competitor shelf uses third-party designs kept LOCAL only (gitignored), so this
+// block is skipped on a fresh public clone where the images are absent.
+const C = 'assets/refs/competitors'
+if (existsSync(`${C}/strong.png`)) {
+  shelf([
+    { label: 'Competitor (strong)', img: `${C}/strong.png` },
+    { label: 'K1 node-graph', img: `${C}/k1.png` },
+    ours,
+    { label: 'K2 frames', img: `${C}/k2.png` },
+    { label: 'K3 romanesco', img: `${C}/k3.png` },
+  ], 'shelf-competitors.png')
+} else {
+  console.log('skip shelf-competitors.png (local-only competitor images not present)')
+}
