@@ -119,6 +119,49 @@ export function hazeFractal(uid, {
   return { defs, body }
 }
 
+// ---------- lit dendrites (composition + volume) ----------
+// A sparse grove of self-similar dendrites with a real light source: each segment is
+// shaded by its distance to the light, so one dendrite reads lit and the rest fall
+// into shadow → volume, not flat fog. Heights are composed (low / medium / one tall
+// focal) to give the picture a centre.
+export function litDendrites(uid, {
+  w, h, light, dendrites, blur = 2, fadeTopFrac = 0.6,
+  branchAngle = 0.46, ratio = 0.72, strokeW = 1.1, jitter = 0.08, gamma = 1.6, extra = 0,
+  lightColor = '#EAD9B8', shadow = '#2b3a30', maxOpacity = 0.5, buckets = 7, glowOpacity = 0.2,
+}) {
+  const seg = Array.from({ length: buckets }, () => [])
+  // brightness falls off with distance to the light, raised to gamma for contrast
+  const bri = (x, y) => Math.pow(Math.max(0, 1 - Math.hypot(x - light.x, y - light.y) / light.r), gamma)
+  for (const dn of dendrites) {
+    const rnd = mulberry32(dn.seed || 1)
+    const branch = (x, y, a, len, d) => {
+      const x2 = x + Math.cos(a) * len, y2 = y + Math.sin(a) * len
+      const b = (bri(x, y) + bri(x2, y2)) / 2
+      seg[Math.min(buckets - 1, Math.floor(b * buckets))].push(`M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`)
+      if (d <= 0) return
+      // two main children + an occasional third for Lichtenberg-like density
+      const kids = [-1, 1]
+      if (rnd() < extra) kids.push((rnd() - 0.5) * 2)
+      for (const s of kids) branch(x2, y2, a + s * branchAngle + (rnd() - 0.5) * jitter, len * ratio, d - 1)
+    }
+    branch(dn.x * w, (dn.baseY ?? 0.99) * h, -Math.PI / 2 + (dn.lean || 0), dn.reach * h, dn.depth)
+  }
+  const fid = `ld-${uid}`, mid = `ldm-${uid}`, gid = `ldg-${uid}`
+  let defs = `<filter id="${fid}" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="${blur}"/></filter>`
+  defs += `<linearGradient id="${mid}-g" x1="0" y1="${h}" x2="0" y2="${fadeTopFrac * h}" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#000"/></linearGradient><mask id="${mid}"><rect width="${w}" height="${h}" fill="url(#${mid}-g)"/></mask>`
+  defs += `<radialGradient id="${gid}" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="${lightColor}" stop-opacity="${glowOpacity}"/><stop offset="55%" stop-color="${lightColor}" stop-opacity="${(glowOpacity * 0.25).toFixed(3)}"/><stop offset="100%" stop-color="${lightColor}" stop-opacity="0"/></radialGradient>`
+  let body = `<g mask="url(#${mid})"><ellipse cx="${light.x}" cy="${light.y}" rx="${light.r * 0.95}" ry="${light.r * 0.72}" fill="url(#${gid})"/><g filter="url(#${fid})" fill="none" stroke-linecap="round">`
+  for (let i = 0; i < buckets; i++) {
+    if (!seg[i].length) continue
+    const b = (i + 0.5) / buckets
+    const col = mix(shadow, lightColor, Math.pow(b, 0.8))
+    const op = (0.04 + maxOpacity * Math.pow(b, 1.35)).toFixed(3)
+    const sw = (strokeW * (0.8 + 0.6 * b)).toFixed(2)
+    body += `<path d="${seg[i].join(' ')}" stroke="${col}" stroke-width="${sw}" opacity="${op}"/>`
+  }
+  return { defs, body: body + '</g></g>' }
+}
+
 // ---------- geometric SELF-SIMILARITY (depth/light, not frames) ----------
 // Golden-rectangle subdivision: carve a square off the long side repeatedly.
 // Each carved block gets a tiny tonal step → a self-similar field of light,
