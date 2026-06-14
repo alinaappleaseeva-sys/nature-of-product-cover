@@ -2,7 +2,7 @@
 // previews. Run from repo root: `npm run render`.
 import { Resvg } from '@resvg/resvg-js'
 import { writeFileSync, mkdirSync } from 'node:fs'
-import { buildLead, buildFallback } from '../src/lib/covers.mjs'
+import { buildLead } from '../src/lib/covers.mjs'
 import { canvas } from '../src/lib/tokens.mjs'
 
 mkdirSync('src/covers', { recursive: true })
@@ -19,9 +19,4 @@ writeFileSync('src/covers/ebook.svg', lead)                              // mast
 writeFileSync('exports/ebook/nature-of-product-ebook.png', png(lead, w)) // 1600×2560 RGB
 writeFileSync('exports/thumbnails/nature-of-product-120.png', png(lead, 120))
 
-// Fallback (light)
-const fb = buildFallback('ebook')
-writeFileSync('src/covers/ebook-fallback.svg', fb)
-writeFileSync('exports/ebook/nature-of-product-ebook-fallback.png', png(fb, w))
-
-console.log('rendered lead (ebook 1600×2560) + fallback + thumbnail')
+console.log('rendered lead (ebook 1600×2560) + thumbnail')

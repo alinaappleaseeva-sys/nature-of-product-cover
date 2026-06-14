@@ -6,9 +6,13 @@
   "description": "Contest book cover for Ivan Zamesin — Nature of Product. SVG-generated, typography-first, subtle fractal motif.",
   "scripts": {
     "render": "node scripts/render.mjs",
+    "fonts": "python3 scripts/build-fonts.py",
+    "outline": "node scripts/outline.mjs",
+    "build:print": "node scripts/outline.mjs && bash scripts/export-print.sh",
     "test:visual": "node scripts/tests.mjs"
   },
   "dependencies": {
-    "@resvg/resvg-js": "^2.6.2"
+    "@resvg/resvg-js": "^2.6.2",
+    "opentype.js": "^2.0.0"
   }
 }

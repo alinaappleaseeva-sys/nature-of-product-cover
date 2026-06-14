@@ -1,67 +1,59 @@
 // Typographic composition = the foundation. The motif layer (defs+body) is drawn
 // BEHIND the type and kept subtle. Typography always leads.
+//
+// coverLayout() computes all geometry once; buildCover() renders it with <text>,
+// and scripts/outline.mjs renders the same geometry with vector glyph paths.
 
 const esc = (s) =>
   String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
 
-/**
- * @param {object} o
- * @param {object} o.palette  {name,bg,ink,accent,dark}
- * @param {object} o.type     {title,sub,author}  family names
- * @param {object} o.text     {titleLines,subtitleLines,author}
- * @param {number} o.w @param {number} o.h
- * @param {'left'|'center'} [o.align]
- * @param {{defs:string,body:string}} [o.back]  motif layer behind the type
- * @param {boolean} [o.rule]  short accent hairline under the title
- */
-export function buildCover({ palette, type, text, w = 1600, h = 2560, align = 'left', back = { defs: '', body: '' }, rule = true, subColor = null }) {
+/** Compute every position/size/colour for a cover. Pure data, no SVG. */
+export function coverLayout({ palette, type, text, w = 1600, h = 2560, align = 'left', back = { defs: '', body: '' }, rule = true, subColor = null }) {
   const m = Math.round(w * 0.095)
   const center = align === 'center'
   const x = center ? Math.round(w / 2) : m
   const anchor = center ? 'middle' : 'start'
 
-  // scale system (relative to width)
   const titleSize = Math.round(w * 0.158)
   const titleLeading = Math.round(titleSize * 0.9)
   const subSize = Math.round(w * 0.0305)
   const subLeading = Math.round(subSize * 1.42)
   const authorSize = Math.round(w * 0.0235)
 
-  // title block: high, commanding, generous lower field
   const titleTop = Math.round(h * 0.135) + titleSize
-  const titleTSpans = text.titleLines
-    .map((line, i) => `<tspan x="${x}" dy="${i === 0 ? 0 : titleLeading}">${esc(line)}</tspan>`)
-    .join('')
   const titleBottom = titleTop + (text.titleLines.length - 1) * titleLeading
 
-  // short accent hairline
   const ruleY = titleBottom + Math.round(titleSize * 0.42)
   const ruleW = Math.round(w * 0.10)
   const ruleX1 = center ? x - Math.round(ruleW / 2) : x
-  const ruleEl = rule
-    ? `<line x1="${ruleX1}" y1="${ruleY}" x2="${ruleX1 + ruleW}" y2="${ruleY}" stroke="${palette.accent}" stroke-width="${Math.max(2, Math.round(w * 0.0015))}"/>`
-    : ''
 
-  // subtitle (accent on dark, ink on light; overridable)
-  const subC = subColor || (palette.dark ? palette.accent : palette.ink)
-  const subOpacity = palette.dark ? 1 : 0.82
-  // more air between the title-rule and the subtitle (Checkpoint-2 note)
   const subY = ruleY + Math.round(subSize * 1.65) + Math.round(h * 0.035)
-  const subTSpans = text.subtitleLines
-    .map((line, i) => `<tspan x="${x}" dy="${i === 0 ? 0 : subLeading}">${esc(line)}</tspan>`)
-    .join('')
-
-  // author: small tracked caps, bottom
   const authorY = h - m
-  const author = esc(text.author).toUpperCase()
 
+  return {
+    w, h, x, anchor, align, bg: palette.bg,
+    back,
+    title: { family: type.title, size: titleSize, leading: titleLeading, top: titleTop, fill: palette.ink, letterSpacing: -titleSize * 0.005, lines: text.titleLines },
+    rule: rule ? { x1: ruleX1, y: ruleY, x2: ruleX1 + ruleW, stroke: palette.accent, width: Math.max(2, Math.round(w * 0.0015)) } : null,
+    sub: { family: type.sub, size: subSize, leading: subLeading, x, y: subY, fill: subColor || (palette.dark ? palette.accent : palette.ink), opacity: palette.dark ? 1 : 0.82, letterSpacing: subSize * 0.01, lines: text.subtitleLines },
+    author: { family: type.author, size: authorSize, x, y: authorY, fill: palette.ink, opacity: 0.66, letterSpacing: authorSize * 0.14, text: String(text.author).toUpperCase() },
+  }
+}
+
+/** Render a cover as SVG with live <text>. */
+export function buildCover(opts) {
+  const L = coverLayout(opts)
+  const { w, h, x, anchor } = L
+  const titleTSpans = L.title.lines.map((line, i) => `<tspan x="${x}" dy="${i === 0 ? 0 : L.title.leading}">${esc(line)}</tspan>`).join('')
+  const subTSpans = L.sub.lines.map((line, i) => `<tspan x="${x}" dy="${i === 0 ? 0 : L.sub.leading}">${esc(line)}</tspan>`).join('')
+  const ruleEl = L.rule ? `<line x1="${L.rule.x1}" y1="${L.rule.y}" x2="${L.rule.x2}" y2="${L.rule.y}" stroke="${L.rule.stroke}" stroke-width="${L.rule.width}"/>` : ''
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
-  <defs>${back.defs}</defs>
-  <rect width="${w}" height="${h}" fill="${palette.bg}"/>
-  ${back.body}
-  <text x="${x}" y="${titleTop}" text-anchor="${anchor}" font-family="${type.title}" font-size="${titleSize}" fill="${palette.ink}" letter-spacing="${(-titleSize * 0.005).toFixed(2)}">${titleTSpans}</text>
+  <defs>${L.back.defs}</defs>
+  <rect width="${w}" height="${h}" fill="${L.bg}"/>
+  ${L.back.body}
+  <text x="${x}" y="${L.title.top}" text-anchor="${anchor}" font-family="${L.title.family}" font-size="${L.title.size}" fill="${L.title.fill}" letter-spacing="${L.title.letterSpacing.toFixed(2)}">${titleTSpans}</text>
   ${ruleEl}
-  <text x="${x}" y="${subY}" text-anchor="${anchor}" font-family="${type.sub}" font-size="${subSize}" fill="${subC}" opacity="${subOpacity}" letter-spacing="${(subSize * 0.01).toFixed(2)}">${subTSpans}</text>
-  <text x="${x}" y="${authorY}" text-anchor="${anchor}" font-family="${type.author}" font-size="${authorSize}" fill="${palette.ink}" opacity="0.66" letter-spacing="${(authorSize * 0.14).toFixed(2)}">${author}</text>
+  <text x="${x}" y="${L.sub.y}" text-anchor="${anchor}" font-family="${L.sub.family}" font-size="${L.sub.size}" fill="${L.sub.fill}" opacity="${L.sub.opacity}" letter-spacing="${L.sub.letterSpacing.toFixed(2)}">${subTSpans}</text>
+  <text x="${x}" y="${L.author.y}" text-anchor="${anchor}" font-family="${L.author.family}" font-size="${L.author.size}" fill="${L.author.fill}" opacity="${L.author.opacity}" letter-spacing="${L.author.letterSpacing.toFixed(2)}">${esc(L.author.text)}</text>
 </svg>`
 }

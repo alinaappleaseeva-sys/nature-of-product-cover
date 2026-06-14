@@ -7,10 +7,24 @@ Dilemma* and Stripe Press titles: calm, intelligent, premium, restrained.
 **Typography leads; the conceptual motif (a barely noticeable fractal / self-similar
 structure echoing the book's Job Graph) supports it.**
 
-> **Status:** 🟢 Block B done — lead locked (deep-green, structured haze). Awaiting
-> Checkpoint 2 (morning) to pick the final, then Block C (print/CMYK + packaging).
-> Lead preview: `exports/ebook/nature-of-product-ebook.png`. Finalists:
-> `explorations/v3-finalists/`. Running log: [`docs/changelog.md`](docs/changelog.md).
+> **Status:** ✅ v1.0 — final cover delivered (deep-green, graph-geometrized haze).
+> Running log: [`docs/changelog.md`](docs/changelog.md).
+>
+> ![cover](exports/ebook/nature-of-product-ebook.png)
+
+## Deliverables (final)
+
+| File | What |
+|------|------|
+| [`exports/ebook/nature-of-product-ebook.png`](exports/ebook/nature-of-product-ebook.png) | Ebook cover — 1600×2560 px, RGB |
+| [`exports/print/nature-of-product-print-cmyk.pdf`](exports/print/nature-of-product-print-cmyk.pdf) | Print cover — 6.25×9.25 in (6×9 trim + 0.125 bleed), **CMYK**, vector |
+| [`exports/print/nature-of-product-print-rgb.pdf`](exports/print/nature-of-product-print-rgb.pdf) | Print cover — same, RGB (vector) |
+| [`exports/print/print-outlined.svg`](exports/print/print-outlined.svg) | Print source — text outlined (vector) |
+| [`src/covers/ebook.svg`](src/covers/ebook.svg) | **Editable master** — live text |
+
+`exports/print/_cmyk-proof.png` is a soft-proof of the CMYK conversion (green holds).
+Note: CMYK uses Ghostscript's generic DeviceCMYK conversion; the printer can re-profile
+to PSOcoated_v3 / their house profile at production.
 
 ## What we deliver
 
@@ -30,9 +44,10 @@ self-similar motif layer), rendered to PNG/PDF. Everything is versioned in git.
 
 ```bash
 npm install
-npm run render        # SVG → PNG previews (RGB) into exports/ and explorations/
+npm run fonts         # bake static font instances from the variable TTFs (needs: pip install fonttools)
+npm run render        # master SVG (live text) + ebook RGB PNG (1600×2560) + thumbnail
 npm run test:visual   # thumbnail / grayscale / blur-squint checks
-# print (CMYK) pipeline is added late, in Block C
+npm run build:print   # outlined vector SVG → RGB PDF → CMYK PDF + soft-proof (needs: ghostscript, librsvg)
 ```
 
 ## Repository layout

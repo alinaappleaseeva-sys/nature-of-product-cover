@@ -1,8 +1,7 @@
-# Design — current chosen solution
+# Design — final solution (v1.0)
 
-> **Status:** LEAD LOCKED (Block B, overnight). Pending Checkpoint 2 (morning) to pick
-> the final from the finalist set. Invariants live in
-> [`design-principles.md`](design-principles.md). Master: [`src/covers/ebook.svg`].
+> **Status:** ✅ FINAL. Decided at Checkpoint 2, print layer delivered. Invariants live
+> in [`design-principles.md`](design-principles.md). Master: `src/covers/ebook.svg`.
 
 ## Direction
 

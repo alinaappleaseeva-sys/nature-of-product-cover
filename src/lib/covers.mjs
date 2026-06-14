@@ -17,10 +17,15 @@ function leadBack(id, w, h) {
   return { defs: light.defs + fr.defs, body: light.body + fr.body }
 }
 
+/** Layout opts for the locked lead (shared by SVG render + outline pipeline). */
+export function leadOpts(size = 'ebook') {
+  const { w, h } = canvas[size]
+  return { palette: leadPalette, type: leadType, text, w, h, align: 'left', back: leadBack('lead', w, h), subColor: subGreen }
+}
+
 /** The locked lead cover. size: 'ebook' | 'print' (geometry scales by width). */
 export function buildLead(size = 'ebook') {
-  const { w, h } = canvas[size]
-  return buildCover({ palette: leadPalette, type: leadType, text, w, h, align: 'left', back: leadBack('lead', w, h), subColor: subGreen })
+  return buildCover(leadOpts(size))
 }
 
 // Light fallback (A2 paper).

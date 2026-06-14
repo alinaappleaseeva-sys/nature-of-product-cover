@@ -96,7 +96,16 @@ Rubric (premium·hier·thumb·concept·shelf·orig):
 - Verified: 120px & 60px legible, grayscale hierarchy holds, dominant under blur
   (exports/thumbnails/_test-sheet.png). Master: src/covers/ebook.svg.
 
-### Next (Block C)
-- Print layer 6.25×9.25 @300dpi CMYK + bleed; soft-proof green (#13271C) with
-  PSOcoated_v3 (watch saturation; lift RGB brightness if it dies); outlined PDF
-  (separate, master stays live); ebook final 1600×2560; package + tag v1.0.
+### Block C — print layer + delivery (v1.0)
+- Layout refactor: `coverLayout()` shares geometry between live-text render and the
+  outline pipeline (no divergence).
+- Outline: `scripts/outline.mjs` (opentype.js) → `exports/print/print-outlined.svg`
+  (fully vector, text→paths; master stays live text).
+- Print export: `scripts/export-print.sh` → RGB PDF (rsvg-convert) → **CMYK PDF**
+  (ghostscript DeviceCMYK) + soft-proof. Verified MediaBox 450×666pt = 6.25×9.25in,
+  DeviceCMYK present.
+- **Green soft-proof:** `#13271C` survives CMYK conversion well (no saturation
+  collapse) — brightness lift not needed. Printer can re-profile to PSOcoated_v3.
+- Cleanup: dropped paper fallback + stale foundation renders.
+- Deliverables: ebook PNG (1600×2560 RGB), print CMYK+RGB PDFs (vector, bleed),
+  outlined SVG, editable master SVG. README/design.md finalized. Tagged **v1.0**.
