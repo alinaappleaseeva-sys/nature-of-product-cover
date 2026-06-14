@@ -225,6 +225,51 @@ export function hazeField(uid, {
   return { defs, body: body + '</g>' }
 }
 
+// ---------- subtle node-graph (fractal branching, subordinate) ----------
+// Small cream nodes + thin edges, recursive 4–5 levels, confined to the lower band.
+// Kept subliminal (low opacity) so typography always leads (skill: fractal subordinate).
+export function nodeGraph(uid, {
+  w, h, seed = 1, regionTop = 0.55,
+  roots = 3, depth = 5, childMin = 2, childExtra = 0.0, spread = 0.55, ratio = 0.62,
+  circleColor = '#EEE4D0', circleOp = 0.09, lineColor = '#EEE4D0', lineOp = 0.06, lineW = 0.5,
+  avoid = [],
+}) {
+  const rnd = mulberry32(seed)
+  const yTop = regionTop * h, yBot = 0.99 * h
+  const len0 = (yBot - yTop) * 0.17
+  const nodes = [], edges = []
+  const inAvoid = (x, y) => avoid.some((r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h)
+  const branch = (x, y, ang, len, d) => {
+    nodes.push([x, y, depth - d])
+    if (d <= 0) return
+    const k = childMin + (rnd() < childExtra ? 1 : 0)
+    for (let i = 0; i < k; i++) {
+      const da = (i - (k - 1) / 2) * spread + (rnd() - 0.5) * 0.18
+      const a = ang + da
+      const nx = x + Math.cos(a) * len, ny = y + Math.sin(a) * len
+      edges.push([x, y, nx, ny])
+      branch(nx, ny, a, len * ratio, d - 1)
+    }
+  }
+  for (let i = 0; i < roots; i++) {
+    const rx = w * ((i + 0.5) / roots) + (rnd() - 0.5) * w * 0.12
+    branch(rx, yTop + (rnd() * 0.04) * h, Math.PI / 2 + (rnd() - 0.5) * 0.4, len0, depth)
+  }
+  const edgeD = edges
+    .filter(([x1, y1, x2, y2]) => !inAvoid(x1, y1) && !inAvoid(x2, y2))
+    .map(([x1, y1, x2, y2]) => `M${x1.toFixed(1)} ${y1.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`)
+    .join(' ')
+  const circs = nodes
+    .filter(([x, y]) => !inAvoid(x, y))
+    .map(([x, y, lvl]) => `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${(2 - lvl / depth).toFixed(2)}"/>`)
+    .join('')
+  const body = `<g>
+    <path d="${edgeD}" fill="none" stroke="${lineColor}" stroke-width="${lineW}" opacity="${lineOp}"/>
+    <g fill="${circleColor}" opacity="${circleOp}">${circs}</g>
+  </g>`
+  return { defs: '', body }
+}
+
 // ---------- geometric SELF-SIMILARITY (depth/light, not frames) ----------
 // Golden-rectangle subdivision: carve a square off the long side repeatedly.
 // Each carved block gets a tiny tonal step → a self-similar field of light,
