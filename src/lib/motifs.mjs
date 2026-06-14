@@ -52,19 +52,25 @@ export function hazeFractal(uid, {
   w, h, color, opacity = 0.1, blur = 3, seed = 7,
   mode = 'organic', reach = 0.15, depth = 7, roots = 5,
   fadeTopFrac = null, strokeW = 1.4,
+  jitter = 0.06, snap = false, links = 0, angle = 0.38,
 }) {
   const rnd = mulberry32(seed)
   const segs = []
-  const ANG = 0.38 // fixed branch half-angle for structured mode
+  const nodes = []
+  const ANG = angle // fixed branch half-angle for structured mode
   const RATIO = 0.72
+  const SNAP = Math.PI / 12 // 15° grid
   function branch(x, y, ang, len, d) {
     const x2 = x + Math.cos(ang) * len
     const y2 = y + Math.sin(ang) * len
     segs.push(`M${x.toFixed(1)} ${y.toFixed(1)} L${x2.toFixed(1)} ${y2.toFixed(1)}`)
+    nodes.push({ x: x2, y: y2, d })
     if (d <= 0) return
     if (mode === 'structured') {
       for (const s of [-1, 1]) {
-        branch(x2, y2, ang + s * ANG + (rnd() - 0.5) * 0.06, len * RATIO, d - 1)
+        let na = ang + s * ANG + (rnd() - 0.5) * jitter
+        if (snap) na = Math.round(na / SNAP) * SNAP
+        branch(x2, y2, na, len * RATIO, d - 1)
       }
     } else {
       const kids = 2 + (rnd() < 0.4 ? 1 : 0)
@@ -78,8 +84,24 @@ export function hazeFractal(uid, {
   for (let i = 0; i < roots; i++) {
     const jitter = mode === 'structured' ? (rnd() - 0.5) * 0.12 : (rnd() - 0.5) * 0.6
     const rx = w * (0.06 + 0.88 * ((i + (mode === 'structured' ? 0.5 : rnd() * 0.6)) / roots))
-    const baseAng = -Math.PI / 2 + jitter
+    const baseAng = -Math.PI / 2 + (mode === 'structured' ? 0 : jitter)
     branch(rx, h * (0.99 + rnd() * 0.01), baseAng, h * (reach + rnd() * 0.03), depth)
+  }
+  // graph edges: connect nearby mid-canopy nodes → loops (a tree has none) so the
+  // field reads as a NETWORK/GRAPH, not foliage. Kills the biological connotation.
+  if (links > 0) {
+    const band = nodes.filter((n) => n.d >= 2 && n.d <= 5)
+    const thr = w * 0.05
+    for (const a of band) {
+      if (rnd() > links) continue
+      let best = null, bd = thr
+      for (const b of band) {
+        if (a === b) continue
+        const dist = Math.hypot(a.x - b.x, a.y - b.y)
+        if (dist > w * 0.012 && dist < bd) { bd = dist; best = b }
+      }
+      if (best) segs.push(`M${a.x.toFixed(1)} ${a.y.toFixed(1)} L${best.x.toFixed(1)} ${best.y.toFixed(1)}`)
+    }
   }
   const fid = `hz-${uid}`
   let defs = `<filter id="${fid}" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="${blur}"/></filter>`

@@ -45,7 +45,8 @@ export function buildCover({ palette, type, text, w = 1600, h = 2560, align = 'l
   // subtitle (accent on dark, ink on light; overridable)
   const subC = subColor || (palette.dark ? palette.accent : palette.ink)
   const subOpacity = palette.dark ? 1 : 0.82
-  const subY = ruleY + Math.round(subSize * 1.65)
+  // more air between the title-rule and the subtitle (Checkpoint-2 note)
+  const subY = ruleY + Math.round(subSize * 1.65) + Math.round(h * 0.035)
   const subTSpans = text.subtitleLines
     .map((line, i) => `<tspan x="${x}" dy="${i === 0 ? 0 : subLeading}">${esc(line)}</tspan>`)
     .join('')

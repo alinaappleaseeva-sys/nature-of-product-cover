@@ -84,3 +84,19 @@ Rubric (premium·hier·thumb·concept·shelf·orig):
 - Haze visibility: currently "discoverable" (opacity 0.12). Dial to 0.10 if you want it
   more subliminal.
 - Author line: keep all-serif caps, or switch to Inter caps for a touch more contrast?
+
+## 2026-06-14
+
+### Checkpoint 2 — decided + master locked
+- Green lead (paper fallback dropped) · haze 0.12 · all-serif author caps · title Book 390.
+- Motif geometrized into a GRAPH (angle-snap 15° + cross-links 0.36 → loops, not a tree)
+  to remove the biological/Nature-mag connotation. G2 "lattice" locked; G1/G3 as dials.
+- Micro-fixes: +3.5%·h air under the title-rule; haze fade 0.60→0.64 (more breathing);
+  author bottom margin = left margin.
+- Verified: 120px & 60px legible, grayscale hierarchy holds, dominant under blur
+  (exports/thumbnails/_test-sheet.png). Master: src/covers/ebook.svg.
+
+### Next (Block C)
+- Print layer 6.25×9.25 @300dpi CMYK + bleed; soft-proof green (#13271C) with
+  PSOcoated_v3 (watch saturation; lift RGB brightness if it dies); outlined PDF
+  (separate, master stays live); ebook final 1600×2560; package + tag v1.0.

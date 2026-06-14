@@ -42,15 +42,20 @@ All instances baked static (`scripts/build-fonts.py`) with unique family names.
 - Subtitle below the rule; author baseline at `h − margin`.
 - Generous lower field (editorial), motif lives there.
 
-## Motif (locked)
+## Motif (locked — G2 "lattice")
 
-`hazeFractal` **structured** mode (fixed branch angle 0.38, ratio 0.72): self-similar,
-reads as structure not nature. opacity 0.12, blur 3.5, depth 9, 15 roots across the
-bottom, `reach 0.10`, **vertical fade to 0.60·h** (dense low, gone before the title).
-Plus `softLight` pool (lower-center, offset to 0.42·w) for depth. Kept subordinate.
+`hazeFractal` **structured + geometrized into a GRAPH** so it reads as network, not a
+tree (removes the biological / Nature-magazine connotation per Checkpoint 2):
+- branch half-angle **0.46**, ratio 0.72, **angle-snap to 15° grid**, **jitter 0**
+- **cross-links 0.36** between mid-canopy nodes → loops (a tree has none = graph read)
+- opacity 0.12, blur 3.5, depth 9, **13 roots**, `reach 0.09`
+- **vertical fade to 0.64·h** (dense low, dissolves before the title)
+- `softLight` pool lower-center (offset 0.42·w, cy 0.86·h) for depth
+Dials if needed: G1 "web" (angle .40 / links .20 / roots 15) more structure; G3 "mist"
+(angle .52 / links .28) softer. opacity 0.10–0.13.
 
-## Finalists for Checkpoint 2
+## Decided at Checkpoint 2
 
-`explorations/v3-finalists/` — F1 (Display 440), F2 (Display Light 330), F3 (minimal
-haze), F4 (paper fallback). Lead = F-Book (390), rendered to `src/covers/ebook.svg`.
-Open dial for the morning: haze opacity 0.10–0.13 (currently 0.12).
+Green lead (drop paper fallback) · haze 0.12 · all-serif author caps · title Book 390.
+Micro-fixes applied: +3.5%·h air between title-rule and subtitle; haze lowered; author
+bottom margin = left margin. Master: `src/covers/ebook.svg`.

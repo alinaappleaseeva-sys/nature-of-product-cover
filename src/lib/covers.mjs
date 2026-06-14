@@ -10,8 +10,10 @@ const subGreen = lighten(leadPalette.accent, 0.16)
 const leadType = { title: families.titleBook, sub: families.serifText, author: families.serifCaps }
 
 function leadBack(id, w, h) {
-  const light = softLight(id, { w, h, cx: w * 0.42, cy: h * 0.84, rx: w * 0.6, ry: h * 0.4, color: lighten(leadPalette.bg, 0.3), opacity: 0.5 })
-  const fr = hazeFractal(id, { w, h, color: leadPalette.ink, mode: 'structured', opacity: 0.12, blur: 3.5, seed: 22, reach: 0.10, depth: 9, roots: 15, fade: 0.60, strokeW: 1.1 })
+  const light = softLight(id, { w, h, cx: w * 0.42, cy: h * 0.86, rx: w * 0.6, ry: h * 0.4, color: lighten(leadPalette.bg, 0.3), opacity: 0.5 })
+  // structured + angle-snap + cross-links → reads as a GRAPH/network, not a tree
+  // (removes the biological/Nature-magazine connotation). fade lowered for breathing.
+  const fr = hazeFractal(id, { w, h, color: leadPalette.ink, mode: 'structured', opacity: 0.12, blur: 3.5, seed: 22, reach: 0.09, depth: 9, roots: 13, fade: 0.64, strokeW: 1.1, jitter: 0, snap: true, links: 0.36, angle: 0.46 })
   return { defs: light.defs + fr.defs, body: light.body + fr.body }
 }
 
