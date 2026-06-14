@@ -8,19 +8,20 @@ Contest entry — front cover design for Ivan Zamesin's *Nature of Product*. Typ
 
 ## Deliverables for submission
 
-| File | Spec |
-|---|---|
-| [exports/ebook/nature-of-product-ebook.png](exports/ebook/nature-of-product-ebook.png) | 1600×2560 px · RGB · PNG — ebook cover |
-| [exports/print/nature-of-product-print.pdf](exports/print/nature-of-product-print.pdf) | 6.25×9.25 in · 300 DPI · CMYK · PDF — print front with bleed |
-| [exports/source/nature-of-product-live-text.svg](exports/source/nature-of-product-live-text.svg) | live text · vector — editable master |
+| File | Spec | How to edit |
+|---|---|---|
+| [exports/ebook/nature-of-product-ebook.png](exports/ebook/nature-of-product-ebook.png) | 1600×2560 px · RGB · PNG — ebook cover | |
+| [exports/print/nature-of-product-print.pdf](exports/print/nature-of-product-print.pdf) | 6.25×9.25 in · 300 DPI · CMYK · PDF — print front with bleed | |
+| [exports/source/nature-of-product-live-text.svg](exports/source/nature-of-product-live-text.svg) | live text · vector — editable master | Open in Figma (drag & drop) or Inkscape (free) |
 
-## Working artifacts
+---
 
-| File | Note |
-|---|---|
-| [exports/ebook/thumbnail-120px.png](exports/ebook/thumbnail-120px.png) | legibility QC check |
-| [exports/print/nature-of-product-print-preview.png](exports/print/nature-of-product-print-preview.png) | visual proof (150 DPI raster from CMYK PDF) |
-| [exports/print/nature-of-product-outlined.svg](exports/print/nature-of-product-outlined.svg) | text → outlines, for print shop if needed |
+## Key Design Decisions
+
+- **Palette — warm near-black + cream:** deep ink background gives shelf authority; cream type stays readable at all sizes.
+- **Motif — node-graph constellation:** fractal branching field in the lower third; discovered on second glance, never competes with the title. References the Job Graph methodology at the heart of the book.
+- **Typography — Fraunces (display serif):** high contrast, editorial character; title in two-line setting for monumental rhythm.
+- **No halo, no spotlight:** motif is ambient texture, not an illustrated object.
 
 ---
 
@@ -33,15 +34,6 @@ Contest entry — front cover design for Ivan Zamesin's *Nature of Product*. Typ
 | **Brief constraint** | fractal as atmosphere, not illustration | literal graphs, brains, gears, arrows |
 
 Brand character: calm, intelligent, premium — the cover should feel inevitable, not designed.
-
----
-
-## Key Design Decisions
-
-- **Palette — warm near-black + cream:** deep ink background gives shelf authority; cream type stays readable at all sizes.
-- **Motif — node-graph constellation:** fractal branching field in the lower third; discovered on second glance, never competes with the title. References the Job Graph methodology at the heart of the book.
-- **Typography — Fraunces (display serif):** high contrast, editorial character; title in two-line setting for monumental rhythm.
-- **No halo, no spotlight:** motif is ambient texture, not an illustrated object.
 
 ---
 
