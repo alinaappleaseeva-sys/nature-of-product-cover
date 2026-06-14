@@ -18,8 +18,8 @@ function leadBack(w, h) {
   const avoid = [{ x: m * 0.5, y: L.author.y - L.author.size * 1.4, w: w * 0.36, h: L.author.size * 2.2 }]
   return nodeGraph('lead', {
     w, h, seed: 7, regionTop: 0.55, avoid,
-    roots: 3, depth: 5, childMin: 2, childExtra: 0.35, spread: 0.55,
-    circleColor: '#EEE4D0', circleOp: 0.09, lineColor: '#EEE4D0', lineOp: 0.06, lineW: 0.5,
+    roots: 5, depth: 5, childMin: 3, childExtra: 0.0, spread: 0.62,
+    circleColor: '#EEE4D0', circleOp: 0.21, lineColor: '#EEE4D0', lineOp: 0.14, lineW: 0.5,
   })
 }
 
