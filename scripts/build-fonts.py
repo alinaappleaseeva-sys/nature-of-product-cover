@@ -25,6 +25,9 @@ INSTANCES = {
     # Grotesque — for serif+sans pairing option
     "Inter Book":             ("Inter.ttf",    {"opsz": 14,  "wght": 420}),
     "Inter Medium":           ("Inter.ttf",    {"opsz": 14,  "wght": 560}),
+    # Extra weights used only for shelf-mock reference recreations
+    "Inter Bold":             ("Inter.ttf",    {"opsz": 14,  "wght": 720}),
+    "Inter Black":            ("Inter.ttf",    {"opsz": 14,  "wght": 880}),
 }
 
 
